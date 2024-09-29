@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Food Waste Management</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            background-image: url("https://cdn.pixabay.com/photo/2016/12/06/18/27/cheese-1887233_1280.jpg");
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: auto; 
+            overflow: auto; 
+        }
+
+        header {
+            background-color: #13d65a;
+            color: white;
+            text-align: center;
+            padding: 20px;
+        }
+
+        section {
+            display: flex;
+            flex-direction: column; 
+            align-items: center; 
+            padding: 20px;
+        }
+
+        h2 {
+            margin: 20px 0;
+            color: #040303;
+            background-color:greenyellow;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            width: 300px;
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px; 
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+
+        label {
+            margin: 10px 0 5px 0;
+        }
+
+        input {
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+
+        button {
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        #hotel-list {
+            width: 400px;
+            border: 1px solid #ccc;
+            padding: 10px;
+            background-color: #fff;
+            border-radius: 8px;
+            overflow-y: auto; 
+            max-height: 70vh; 
+            margin-top: 20px; 
+        }
+
+        .hotel-info {
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 15px;
+            margin-top: 10px;
+            border-radius: 4px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            animation: slide-in 0.5s ease-out;
+        }
+
+        .hotel-btn {
+            padding: 10px;
+            margin-top: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+            text-align: left;
+            width: 100%;
+        }
+
+        .hotel-btn:hover {
+            background-color: #45a049;
+        }
+
+        @keyframes slide-in {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Food Waste Management</h1>
+</header>
+
+<section>
+    <h2>Hotel Information Submission</h2>
+    <form id="hotelForm">
+        <label for="hotelName">Hotel Name:</label>
+        <input type="text" id="hotelName" required>
+
+        <label for="amount">Amount of Food Leftover (in kg):</label>
+        <input type="number" id="amount" required>
+
+        <label for="contact">Contact Number:</label>
+        <input type="text" id="contact" required>
+
+        <label for="location">Location (address):</label>
+        <input type="text" id="location" required>
+
+        <button type="submit">Post</button>
+    </form>
+
+    <h2>Available Food In Hotels</h2>
+    <div id="hotel-list">
+        
+    </div>
+</section>
+
+<script>
+    document.getElementById('hotelForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+
+        
+        const hotelName = document.getElementById('hotelName').value;
+        const amount = document.getElementById('amount').value;
+        const contact = document.getElementById('contact').value;
+        const location = document.getElementById('location').value;
+
+        // Get current date and time
+        const now = new Date();
+        const dateTime = now.toLocaleString();
+
+        // Create a new hotel button
+        const hotelBtn = document.createElement('button');
+        hotelBtn.classList.add('hotel-btn');
+        hotelBtn.innerHTML = hotelName;
+
+        // Create a new hotel info div
+        const hotelInfo = document.createElement('div');
+        hotelInfo.classList.add('hotel-info');
+
+        // Add content to the hotel info div
+        const locationLink = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(location)}`;
+        hotelInfo.innerHTML = `
+            <p><strong>Amount of Food Leftover:</strong> ${amount} kg</p>
+            <p><strong>Contact:</strong> ${contact}</p>
+            <p><strong>Location:</strong> <a href="${locationLink}" target="_blank">View on Google Maps</a></p>
+            <p><strong>Posted On:</strong> ${dateTime}</p>
+        `;
+
+        
+        hotelBtn.addEventListener('click', function() {
+            hotelInfo.classList.toggle('hidden');
+            hotelInfo.scrollIntoView({ behavior: 'smooth' }); 
+        });
+
+        
+        document.getElementById('hotel-list').appendChild(hotelBtn);
+        document.getElementById('hotel-list').appendChild(hotelInfo);
+
+        
+        hotelInfo.scrollIntoView({ behavior: 'smooth' });
+
+        
+        document.getElementById('hotelForm').reset();
+    });
+
+    
+    const sampleHotels = [
+        { name: "Hotel Sunshine", amount: 20, contact: "123-456-7890", location: "123 Sunshine St, City" },
+        { name: "Mountain View Hotel", amount: 15, contact: "234-567-8901", location: "456 Mountain Rd, City" },
+        { name: "Ocean Breeze Inn", amount: 30, contact: "345-678-9012", location: "789 Ocean Ave, City" },
+    ];
+
+    
+    sampleHotels.forEach(hotel => {
+        document.getElementById('hotelName').value = hotel.name;
+        document.getElementById('amount').value = hotel.amount;
+        document.getElementById('contact').value = hotel.contact;
+        document.getElementById('location').value = hotel.location;
+
+        
+        document.getElementById('hotelForm').dispatchEvent(new Event('submit'));
+    });
+</script>
+
+</body>
+</html>
